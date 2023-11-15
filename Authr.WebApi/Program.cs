@@ -1,48 +1,21 @@
 using Authr.WebApi;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.DataProtection;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDataProtection();
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<AuthService>();
+builder.Services.AddAuthentication("cookie")
+    .AddCookie("cookie");
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 
-app.Use((ctx, next) =>
-{
-    var idp = ctx.RequestServices.GetRequiredService<IDataProtectionProvider>();
-    var protector = idp.CreateProtector("auth-cookie");
-
-    var authCookie = ctx.Request.Headers.Cookie.FirstOrDefault(x => x.StartsWith("auth="));
-
-    if (authCookie == null)
-    {
-        return next();
-    }
-
-    var protectedPayload = authCookie.Split('=').Last();
-    var payload = protector.Unprotect(protectedPayload);
-    var parts = payload.Split(':');
-    var key = parts[0];
-    var value = parts[1];
-
-    var claims = new List<Claim>
-    {
-        new Claim(key, value)
-    };
-
-    var identity = new ClaimsIdentity(claims);
-    ctx.User = new ClaimsPrincipal(identity);
-
-    return next();
-});
 
 var summaries = new[]
 {
@@ -67,9 +40,16 @@ app.MapGet("/username", (HttpContext ctx, IDataProtectionProvider idp) =>
     return ctx.User.FindFirst("usr").Value;
 });
 
-app.MapGet("/login", (AuthService authService) =>
+app.MapGet("/login", async (HttpContext ctx) =>
 {
-    authService.SignIn();
+    var claims = new List<Claim>
+    {
+        new Claim("usr", "sharon")
+    };
+    var identity = new ClaimsIdentity(claims, "cookie");
+    var user = new ClaimsPrincipal(identity);
+
+    await ctx.SignInAsync("cookie", user);
     return "ok";
 });
 
