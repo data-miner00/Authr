@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.DataProtection;
 using System.Security.Claims;
 
+const string AuthScheme = "cookie";
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddAuthentication("cookie")
-    .AddCookie("cookie");
+    .AddCookie(AuthScheme);
 
 var app = builder.Build();
 
@@ -37,19 +39,37 @@ app.MapGet("/weatherforecast", () =>
 
 app.MapGet("/username", (HttpContext ctx, IDataProtectionProvider idp) =>
 {
-    return ctx.User.FindFirst("usr").Value;
+    return ctx.User.FindFirst("usr").Value ?? "empty";
+});
+
+app.MapGet("/sweden", (HttpContext ctx) =>
+{
+    if (!ctx.User.Identities.Any(x => x.Name == AuthScheme))
+    {
+        ctx.Response.StatusCode = 401;
+        return "denied";
+    }
+
+    if (!ctx.User.HasClaim("passport", "eur"))
+    {
+        ctx.Response.StatusCode = 403;
+        return "denied";
+    }
+
+    return "allowed";
 });
 
 app.MapGet("/login", async (HttpContext ctx) =>
 {
     var claims = new List<Claim>
     {
-        new Claim("usr", "sharon")
+        new Claim("usr", "sharon"),
+        new Claim("passport", "eur")
     };
-    var identity = new ClaimsIdentity(claims, "cookie");
+    var identity = new ClaimsIdentity(claims, AuthScheme);
     var user = new ClaimsPrincipal(identity);
 
-    await ctx.SignInAsync("cookie", user);
+    await ctx.SignInAsync(AuthScheme, user);
     return "ok";
 });
 
