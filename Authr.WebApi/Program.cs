@@ -1,16 +1,48 @@
 using Authr.WebApi;
 using Microsoft.AspNetCore.DataProtection;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDataProtection();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<AuthService>();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();
+
+app.Use((ctx, next) =>
+{
+    var idp = ctx.RequestServices.GetRequiredService<IDataProtectionProvider>();
+    var protector = idp.CreateProtector("auth-cookie");
+
+    var authCookie = ctx.Request.Headers.Cookie.FirstOrDefault(x => x.StartsWith("auth="));
+
+    if (authCookie == null)
+    {
+        return next();
+    }
+
+    var protectedPayload = authCookie.Split('=').Last();
+    var payload = protector.Unprotect(protectedPayload);
+    var parts = payload.Split(':');
+    var key = parts[0];
+    var value = parts[1];
+
+    var claims = new List<Claim>
+    {
+        new Claim(key, value)
+    };
+
+    var identity = new ClaimsIdentity(claims);
+    ctx.User = new ClaimsPrincipal(identity);
+
+    return next();
+});
 
 var summaries = new[]
 {
@@ -32,16 +64,16 @@ app.MapGet("/weatherforecast", () =>
 
 app.MapGet("/username", (HttpContext ctx, IDataProtectionProvider idp) =>
 {
-    var protector = idp.CreateProtector("auth-cookie");
-
-    var authCookie = ctx.Request.Headers.Cookie.FirstOrDefault(x => x.StartsWith("auth="));
-    var protectedPayload = authCookie.Split('=').Last();
-    var payload = protector.Unprotect(protectedPayload);
-    var value = payload.Split(':').Last();
-    return value;
+    return ctx.User.FindFirst("usr").Value;
 });
 
-app.MapGet("/login", (HttpContext ctx, IDataProtectionProvider idp) =>
+app.MapGet("/login", (AuthService authService) =>
+{
+    authService.SignIn();
+    return "ok";
+});
+
+app.MapGet("/login_manual", (HttpContext ctx, IDataProtectionProvider idp) =>
 {
     var protector = idp.CreateProtector("auth-cookie");
     ctx.Response.Headers["set-cookie"] = $"auth={protector.Protect("usr:sharon")}";
