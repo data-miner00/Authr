@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.DataProtection;
 using System.Security.Claims;
 
 const string AuthScheme = "cookie";
+const string AuthScheme2 = "cookie2";
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddAuthentication("cookie")
-    .AddCookie(AuthScheme);
+    .AddCookie(AuthScheme)
+    .AddCookie(AuthScheme2);
 
 var app = builder.Build();
 
@@ -18,6 +20,27 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 
+app.Use((ctx, next) =>
+{
+    if (ctx.Request.Path.StartsWithSegments("/login"))
+    {
+        return next();
+    }
+
+    if (!ctx.User.Identities.Any(x => x.AuthenticationType == AuthScheme))
+    {
+        ctx.Response.StatusCode = 401;
+        return Task.CompletedTask;
+    }
+
+    if (!ctx.User.HasClaim("passport", "eur"))
+    {
+        ctx.Response.StatusCode = 403;
+        return Task.CompletedTask;
+    }
+
+    return next();
+});
 
 var summaries = new[]
 {
@@ -44,18 +67,16 @@ app.MapGet("/username", (HttpContext ctx, IDataProtectionProvider idp) =>
 
 app.MapGet("/sweden", (HttpContext ctx) =>
 {
-    if (!ctx.User.Identities.Any(x => x.Name == AuthScheme))
-    {
-        ctx.Response.StatusCode = 401;
-        return "denied";
-    }
+    return "allowed";
+});
 
-    if (!ctx.User.HasClaim("passport", "eur"))
-    {
-        ctx.Response.StatusCode = 403;
-        return "denied";
-    }
+app.MapGet("/norway", (HttpContext ctx) =>
+{
+    return "allowed";
+});
 
+app.MapGet("/denmark", (HttpContext ctx) =>
+{
     return "allowed";
 });
 
