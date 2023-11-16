@@ -1,5 +1,6 @@
 using Authr.WebApi;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using System.Security.Claims;
 
@@ -13,12 +14,15 @@ builder.Services.AddAuthentication("cookie")
     .AddCookie(AuthScheme)
     .AddCookie(AuthScheme2);
 
+builder.Services.AddSingleton<IAuthorizationHandler, MinimumAgeHandler>();
+
 builder.Services.AddAuthorization(builder =>
 {
     builder.AddPolicy("eu passport", pb =>
     {
         pb.RequireAuthenticatedUser()
             .AddAuthenticationSchemes(AuthScheme)
+            .AddRequirements(new MinimumAgeRequirement(18))
             .RequireClaim("passport", "eur");
     });
 });
@@ -76,7 +80,8 @@ app.MapGet("/login", async (HttpContext ctx) =>
     var claims = new List<Claim>
     {
         new Claim("usr", "sharon"),
-        new Claim("passport", "eur")
+        new Claim("passport", "eur"),
+        new Claim(ClaimTypes.DateOfBirth, DateTime.Now.AddYears(-19).ToString())
     };
     var identity = new ClaimsIdentity(claims, AuthScheme);
     var user = new ClaimsPrincipal(identity);
