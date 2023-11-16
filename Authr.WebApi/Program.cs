@@ -13,34 +13,25 @@ builder.Services.AddAuthentication("cookie")
     .AddCookie(AuthScheme)
     .AddCookie(AuthScheme2);
 
+builder.Services.AddAuthorization(builder =>
+{
+    builder.AddPolicy("eu passport", pb =>
+    {
+        pb.RequireAuthenticatedUser()
+            .AddAuthenticationSchemes(AuthScheme)
+            .RequireClaim("passport", "eur");
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
-app.UseHttpsRedirection();
-app.UseAuthentication();
+app
+    .UseHttpsRedirection()
+    .UseAuthentication()
+    .UseAuthorization();
 
-app.Use((ctx, next) =>
-{
-    if (ctx.Request.Path.StartsWithSegments("/login"))
-    {
-        return next();
-    }
-
-    if (!ctx.User.Identities.Any(x => x.AuthenticationType == AuthScheme))
-    {
-        ctx.Response.StatusCode = 401;
-        return Task.CompletedTask;
-    }
-
-    if (!ctx.User.HasClaim("passport", "eur"))
-    {
-        ctx.Response.StatusCode = 403;
-        return Task.CompletedTask;
-    }
-
-    return next();
-});
 
 var summaries = new[]
 {
@@ -68,7 +59,7 @@ app.MapGet("/username", (HttpContext ctx, IDataProtectionProvider idp) =>
 app.MapGet("/sweden", (HttpContext ctx) =>
 {
     return "allowed";
-});
+}).RequireAuthorization("eu passport");
 
 app.MapGet("/norway", (HttpContext ctx) =>
 {
@@ -92,7 +83,7 @@ app.MapGet("/login", async (HttpContext ctx) =>
 
     await ctx.SignInAsync(AuthScheme, user);
     return "ok";
-});
+}).AllowAnonymous();
 
 app.MapGet("/login_manual", (HttpContext ctx, IDataProtectionProvider idp) =>
 {
