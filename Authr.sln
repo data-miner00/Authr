@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.Web", "Authr.Web\Auth
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.WebApi", "Authr.WebApi\Authr.WebApi.csproj", "{4BD25651-7DB8-4B7F-AD78-210132CF38D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authr.Roles.WebApi", "Authr.Roles.WebApi\Authr.Roles.WebApi.csproj", "{9215D224-1ED8-4391-8B93-5A05994BA61E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.Roles.WebApi", "Authr.Roles.WebApi\Authr.Roles.WebApi.csproj", "{9215D224-1ED8-4391-8B93-5A05994BA61E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authr.IdentityFramework.WebApi", "Authr.IdentityFramework.WebApi\Authr.IdentityFramework.WebApi.csproj", "{B790CA6B-7F57-4F33-A179-4D8970895F54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.IdentityFramework.WebApi", "Authr.IdentityFramework.WebApi\Authr.IdentityFramework.WebApi.csproj", "{B790CA6B-7F57-4F33-A179-4D8970895F54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authr.AuthSchemas.WebApi", "Authr.AuthSchemas.WebApi\Authr.AuthSchemas.WebApi.csproj", "{55106B35-6621-4C23-9D8C-7565CCD382C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{B790CA6B-7F57-4F33-A179-4D8970895F54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B790CA6B-7F57-4F33-A179-4D8970895F54}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B790CA6B-7F57-4F33-A179-4D8970895F54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55106B35-6621-4C23-9D8C-7565CCD382C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55106B35-6621-4C23-9D8C-7565CCD382C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55106B35-6621-4C23-9D8C-7565CCD382C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55106B35-6621-4C23-9D8C-7565CCD382C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
