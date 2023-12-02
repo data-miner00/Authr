@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.Roles.WebApi", "Authr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.IdentityFramework.WebApi", "Authr.IdentityFramework.WebApi\Authr.IdentityFramework.WebApi.csproj", "{B790CA6B-7F57-4F33-A179-4D8970895F54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authr.AuthSchemas.WebApi", "Authr.AuthSchemas.WebApi\Authr.AuthSchemas.WebApi.csproj", "{55106B35-6621-4C23-9D8C-7565CCD382C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.AuthSchemas.WebApi", "Authr.AuthSchemas.WebApi\Authr.AuthSchemas.WebApi.csproj", "{55106B35-6621-4C23-9D8C-7565CCD382C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authr.IdentityMgmt.WebApi", "Authr.IdentityMgmt.WebApi\Authr.IdentityMgmt.WebApi.csproj", "{B7D39E3E-3924-43F0-81E9-FF7969E2BBA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{55106B35-6621-4C23-9D8C-7565CCD382C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55106B35-6621-4C23-9D8C-7565CCD382C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55106B35-6621-4C23-9D8C-7565CCD382C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7D39E3E-3924-43F0-81E9-FF7969E2BBA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7D39E3E-3924-43F0-81E9-FF7969E2BBA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7D39E3E-3924-43F0-81E9-FF7969E2BBA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7D39E3E-3924-43F0-81E9-FF7969E2BBA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
