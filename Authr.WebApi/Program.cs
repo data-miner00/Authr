@@ -99,9 +99,6 @@ app.MapGet("/login_manual", (HttpContext ctx, IDataProtectionProvider idp) =>
 
 app.Run();
 
-var person = new Person2("Alex", "Jones", DateTime.Now, 180);
-var other = person with { FirstName = "Bob" };
-
 internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
