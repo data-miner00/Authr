@@ -1,3 +1,4 @@
+using Authr.Core;
 using Authr.WebApi;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -37,15 +38,12 @@ app
     .UseAuthorization();
 
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+var summaries = WeatherForecastContext.summaries.ToArray();
 
 app.MapGet("/weatherforecast", () =>
 {
     var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
+        new WeatherForecastContext.WeatherForecast
         (
             DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
             Random.Shared.Next(-20, 55),
@@ -98,8 +96,3 @@ app.MapGet("/login_manual", (HttpContext ctx, IDataProtectionProvider idp) =>
 });
 
 app.Run();
-
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

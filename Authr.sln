@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.AuthSchemas.WebApi", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.IdentityMgmt.WebApi", "Authr.IdentityMgmt.WebApi\Authr.IdentityMgmt.WebApi.csproj", "{B7D39E3E-3924-43F0-81E9-FF7969E2BBA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authr.Google.OAuth", "Authr.Google.OAuth\Authr.Google.OAuth.csproj", "{8DE81698-9B4C-43E2-B673-A85269156B6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.Google.OAuth", "Authr.Google.OAuth\Authr.Google.OAuth.csproj", "{8DE81698-9B4C-43E2-B673-A85269156B6A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authr.Core", "Auth.Core\Authr.Core.csproj", "{098429C6-DD70-4050-85FC-7EDD0EAD5E31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{8DE81698-9B4C-43E2-B673-A85269156B6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DE81698-9B4C-43E2-B673-A85269156B6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DE81698-9B4C-43E2-B673-A85269156B6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{098429C6-DD70-4050-85FC-7EDD0EAD5E31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{098429C6-DD70-4050-85FC-7EDD0EAD5E31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{098429C6-DD70-4050-85FC-7EDD0EAD5E31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{098429C6-DD70-4050-85FC-7EDD0EAD5E31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
