@@ -1,38 +1,36 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿namespace Authr.WebApi;
+
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
-namespace Authr.WebApi
+/// <summary>
+/// The class that handles minimum age checks.
+/// </summary>
+public class MinimumAgeHandler : AuthorizationHandler<MinimumAgeRequirement>
 {
-    public class MinimumAgeHandler : AuthorizationHandler<MinimumAgeRequirement>
+    /// <inheritdoc/>
+    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, MinimumAgeRequirement requirement)
     {
-        /// <summary>
-        /// Can use injected services.
-        /// </summary>
-        public MinimumAgeHandler() { }
+        var dobClaim = context.User.FindFirst(ClaimTypes.DateOfBirth);
 
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, MinimumAgeRequirement requirement)
+        if (dobClaim is null)
         {
-            var dobClaim = context.User.FindFirst(ClaimTypes.DateOfBirth);
-
-            if (dobClaim is null)
-            {
-                return Task.CompletedTask;
-            }
-
-            var dob = Convert.ToDateTime(dobClaim.Value);
-            var age = DateTime.Today.Year - dob.Year;
-
-            if (dob > DateTime.Today.AddYears(-age))
-            {
-                age--;
-            }
-
-            if (age >= requirement.MinimumAge)
-            {
-                context.Succeed(requirement);
-            }
-
             return Task.CompletedTask;
         }
+
+        var dob = Convert.ToDateTime(dobClaim.Value);
+        var age = DateTime.Today.Year - dob.Year;
+
+        if (dob > DateTime.Today.AddYears(-age))
+        {
+            age--;
+        }
+
+        if (age >= requirement.MinimumAge)
+        {
+            context.Succeed(requirement);
+        }
+
+        return Task.CompletedTask;
     }
 }

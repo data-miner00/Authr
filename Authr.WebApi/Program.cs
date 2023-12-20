@@ -1,16 +1,15 @@
-using Authr.Core;
+using System.Security.Claims;
 using Authr.WebApi;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
-using System.Security.Claims;
 
 const string AuthScheme = "cookie";
+
 const string AuthScheme2 = "cookie2";
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddAuthentication("cookie")
     .AddCookie(AuthScheme)
     .AddCookie(AuthScheme2);
@@ -30,28 +29,10 @@ builder.Services.AddAuthorization(builder =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-
 app
     .UseHttpsRedirection()
     .UseAuthentication()
     .UseAuthorization();
-
-
-var summaries = WeatherForecastContext.summaries.ToArray();
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecastContext.WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-});
 
 app.MapGet("/username", (HttpContext ctx, IDataProtectionProvider idp) =>
 {
@@ -70,6 +51,18 @@ app.MapGet("/norway", (HttpContext ctx) =>
 
 app.MapGet("/denmark", (HttpContext ctx) =>
 {
+    if (!ctx.User.Identities.Any(x => x.AuthenticationType == AuthScheme))
+    {
+        ctx.Response.StatusCode = 401;
+        return string.Empty;
+    }
+
+    if (!ctx.User.HasClaim("passport", "eur"))
+    {
+        ctx.Response.StatusCode = 403;
+        return "Forbidden";
+    }
+
     return "allowed";
 });
 
@@ -77,10 +70,11 @@ app.MapGet("/login", async (HttpContext ctx) =>
 {
     var claims = new List<Claim>
     {
-        new Claim("usr", "sharon"),
-        new Claim("passport", "eur"),
-        new Claim(ClaimTypes.DateOfBirth, DateTime.Now.AddYears(-19).ToString())
+        new("usr", "sharon"),
+        new("passport", "eur"),
+        new(ClaimTypes.DateOfBirth, DateTime.Now.AddYears(-19).ToString()),
     };
+
     var identity = new ClaimsIdentity(claims, AuthScheme);
     var user = new ClaimsPrincipal(identity);
 
