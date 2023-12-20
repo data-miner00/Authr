@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddDbContext<IdentityDbContext>();
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(o =>
@@ -23,7 +22,6 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 using var scope = app.Services.CreateScope();
 
 var roleMgr = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
