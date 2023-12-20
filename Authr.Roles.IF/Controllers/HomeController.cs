@@ -1,4 +1,4 @@
-﻿namespace Authr.Roles.WebApi.Controllers;
+namespace Authr.Roles.IF.Controllers;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
