@@ -1,13 +1,12 @@
+using System.Security.Claims;
 using Authr.IdentityMgmt.WebApi;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddDefaultTokenProviders();
 
@@ -28,8 +27,6 @@ builder.Services.AddAuthorizationBuilder()
     });
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();
 
@@ -86,7 +83,7 @@ app.MapGet("/promote", async (string username, Database db) =>
 {
     var user = await db.GetUserAsync(username);
 
-    user.Claims.Add(new UserClaim("role", "manager"));
+    user.Claims.Add(new Claim("role", "manager"));
     await db.PutAsync(user);
     return "promoted";
 });
@@ -121,7 +118,6 @@ app.MapGet("/end-reset-pw", async (
     return "password reset";
 });
 
-
 app.MapGet("/protected", () => "something super secret").RequireAuthorization("manager");
 
 app.MapGet("/test", (UserManager<IdentityUser> userMgr, SignInManager<IdentityUser> signInMgr) =>
@@ -130,19 +126,3 @@ app.MapGet("/test", (UserManager<IdentityUser> userMgr, SignInManager<IdentityUs
 });
 
 app.Run();
-
-public class UserHelper
-{
-    public static ClaimsPrincipal Convert(User user)
-    {
-        var claims = new List<Claim>
-        {
-            new("username", user.Username),
-        };
-
-        claims.AddRange(user.Claims.Select(x => new Claim(x.Type, x.Value)));
-
-        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        return new(identity);
-    }
-}

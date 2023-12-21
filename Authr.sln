@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.Roles", "Authr.Roles\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.Roles.IF", "Authr.Roles.IF\Authr.Roles.IF.csproj", "{B790CA6B-7F57-4F33-A179-4D8970895F54}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.AuthSchemas.WebApi", "Authr.AuthSchemas.WebApi\Authr.AuthSchemas.WebApi.csproj", "{55106B35-6621-4C23-9D8C-7565CCD382C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.Cookie.Schemes", "Authr.Cookie.Schemes\Authr.Cookie.Schemes.csproj", "{55106B35-6621-4C23-9D8C-7565CCD382C2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.IdentityMgmt.WebApi", "Authr.IdentityMgmt.WebApi\Authr.IdentityMgmt.WebApi.csproj", "{B7D39E3E-3924-43F0-81E9-FF7969E2BBA3}"
 EndProject
