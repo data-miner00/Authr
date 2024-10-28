@@ -3,7 +3,7 @@
     "http": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
+      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -13,7 +13,7 @@
     "https": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
+      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -23,17 +23,10 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
+      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
-    },
-    "Docker": {
-      "commandName": "Docker",
-      "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/weatherforecast",
-      "publishAllPorts": true,
-      "useSSL": true
     }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json",
