@@ -1,6 +1,0 @@
-@Authr.Cookie.Schemes_HostAddress = http://localhost:5071
-
-GET {{Authr.Cookie.Schemes_HostAddress}}/
-Accept: application/json
-
-###

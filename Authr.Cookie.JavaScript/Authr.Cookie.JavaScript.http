@@ -1,6 +1,0 @@
-@Authr.Cookie.JavaScript_HostAddress = http://localhost:5031
-
-GET {{Authr.Cookie.JavaScript_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
