@@ -22,8 +22,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3F5E8A13-017F-4EAF-81A1-C60BFCF139B9}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
 		Caddyfile = Caddyfile
 		Directory.Build.props = Directory.Build.props
+		LICENSE.txt = LICENSE.txt
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Roles", "Roles", "{352A22FD-3A19-4990-A280-4F94A78B48F3}"
@@ -38,7 +42,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cookie", "Cookie", "{BE12EB
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sso", "Sso", "{1C752F53-2FEE-41C8-BCE9-2A88C20F9F6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authr.Cookie.Sso.App", "Authr.Cookie.Sso.App\Authr.Cookie.Sso.App.csproj", "{46C33010-542A-4398-A719-CBAFACC15E43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.Cookie.Sso.App", "Authr.Cookie.Sso.App\Authr.Cookie.Sso.App.csproj", "{46C33010-542A-4398-A719-CBAFACC15E43}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authr.Core.UnitTests", "Authr.Core.UnitTests\Authr.Core.UnitTests.csproj", "{B771BD59-FD1E-4D17-BD6B-47F09E6F86F4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F2A27BAD-DDF4-4C72-8996-6D32656D9DD7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -94,6 +102,10 @@ Global
 		{46C33010-542A-4398-A719-CBAFACC15E43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46C33010-542A-4398-A719-CBAFACC15E43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46C33010-542A-4398-A719-CBAFACC15E43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B771BD59-FD1E-4D17-BD6B-47F09E6F86F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B771BD59-FD1E-4D17-BD6B-47F09E6F86F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B771BD59-FD1E-4D17-BD6B-47F09E6F86F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B771BD59-FD1E-4D17-BD6B-47F09E6F86F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -107,6 +119,7 @@ Global
 		{C841853D-9273-4415-81F3-FADC4F72110C} = {1C752F53-2FEE-41C8-BCE9-2A88C20F9F6F}
 		{1C752F53-2FEE-41C8-BCE9-2A88C20F9F6F} = {BE12EBB9-D10F-46A0-B5E5-8CFBDEDC6767}
 		{46C33010-542A-4398-A719-CBAFACC15E43} = {1C752F53-2FEE-41C8-BCE9-2A88C20F9F6F}
+		{B771BD59-FD1E-4D17-BD6B-47F09E6F86F4} = {F2A27BAD-DDF4-4C72-8996-6D32656D9DD7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6B5DF8E6-A153-4DAE-8BBC-834B58A76A37}

@@ -8,8 +8,4 @@
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Auth.Core\Authr.Core.csproj" />
-  </ItemGroup>
-
 </Project>
