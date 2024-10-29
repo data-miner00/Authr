@@ -8,9 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Apis.Auth" Version="1.64.0" />
-    <PackageReference Include="Google.Apis.Gmail.v1" Version="1.64.0.3231" />
-    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.64.0.3205" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.68.0" />
+    <PackageReference Include="Google.Apis.Gmail.v1" Version="1.68.0.3427" />
+    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.68.0.3582" />
   </ItemGroup>
 
 </Project>
