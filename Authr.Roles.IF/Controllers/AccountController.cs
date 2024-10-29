@@ -17,8 +17,8 @@ public class AccountController : ControllerBase
     [HttpGet("login")]
     public async Task<IActionResult> Login(SignInManager<IdentityUser> signInManager)
     {
-        await signInManager.PasswordSignInAsync("test@test.com", "test", false, false);
+        var signInResult = await signInManager.PasswordSignInAsync("kinsta", password: Program.ComplicatedPassword, false, false);
 
-        return this.Ok();
+        return signInResult.Succeeded ? this.Ok() : this.BadRequest();
     }
 }

@@ -1,46 +1,64 @@
+namespace Authr.Roles.IF;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddDbContext<IdentityDbContext>();
-
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(o =>
+public static class Program
 {
-    o.User.RequireUniqueEmail = true;
+    public const string ComplicatedPassword = "AbcdEFgHIJk123!";
 
-    o.Password.RequireDigit = true;
-    o.Password.RequiredLength = 10;
-    o.Password.RequireLowercase = true;
-    o.Password.RequireUppercase = true;
-    o.Password.RequireNonAlphanumeric = true;
-})
-    .AddEntityFrameworkStores<IdentityDbContext>()
-    .AddDefaultTokenProviders();
+    public static async Task Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+        builder.Services.AddDbContext<IdentityDbContext>(ctx => ctx.UseInMemoryDatabase("db"));
 
-var app = builder.Build();
+        builder.Services.AddIdentity<IdentityUser, IdentityRole>(o =>
+        {
+            o.User.RequireUniqueEmail = true;
 
-using var scope = app.Services.CreateScope();
+            o.Password.RequireDigit = true;
+            o.Password.RequiredLength = 10;
+            o.Password.RequireLowercase = true;
+            o.Password.RequireUppercase = true;
+            o.Password.RequireNonAlphanumeric = true;
+        })
+            .AddEntityFrameworkStores<IdentityDbContext>()
+            .AddDefaultTokenProviders();
 
-var roleMgr = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-var usrMgr = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+        // No need AddAuthorization
+        builder.Services.AddControllers();
 
-var usr = new IdentityUser
-{
-    UserName = "Test",
-    Email = "Test",
-};
+        var app = builder.Build();
 
-await usrMgr.CreateAsync(usr, password: "test");
-await roleMgr.CreateAsync(new IdentityRole { Name = "admin" });
-await usrMgr.AddToRoleAsync(usr, "admin");
+        await app.InitializeAdminUserAsync();
 
-app.UseHttpsRedirection();
+        app.UseHttpsRedirection();
 
-app.UseAuthorization();
+        app.UseAuthorization();
 
-app.MapControllers();
+        app.MapControllers();
 
-app.Run();
+        app.Run();
+    }
+
+    private static async Task InitializeAdminUserAsync(this WebApplication app)
+    {
+        using var scope = app.Services.CreateScope();
+
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+        var user = new IdentityUser
+        {
+            UserName = "kinsta",
+            Email = "kinsta_@yahoo.eu",
+        };
+
+        var result = await userManager.CreateAsync(user, password: ComplicatedPassword);
+
+        await roleManager.CreateAsync(new IdentityRole { Name = "admin" });
+        await userManager.AddToRoleAsync(user, "admin");
+    }
+}
