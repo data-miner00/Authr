@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.Web", "Authr.Web\Authr.Web.csproj", "{C2E1A4BF-04B3-4049-B4C3-9F78FC4D3C59}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.WebApi", "Authr.WebApi\Authr.WebApi.csproj", "{4BD25651-7DB8-4B7F-AD78-210132CF38D3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.Roles", "Authr.Roles\Authr.Roles.csproj", "{9215D224-1ED8-4391-8B93-5A05994BA61E}"
@@ -44,7 +42,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sso", "Sso", "{1C752F53-2FE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.Cookie.Sso.App", "Authr.Cookie.Sso.App\Authr.Cookie.Sso.App.csproj", "{46C33010-542A-4398-A719-CBAFACC15E43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authr.Core.UnitTests", "Authr.Core.UnitTests\Authr.Core.UnitTests.csproj", "{B771BD59-FD1E-4D17-BD6B-47F09E6F86F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authr.Core.UnitTests", "Authr.Core.UnitTests\Authr.Core.UnitTests.csproj", "{B771BD59-FD1E-4D17-BD6B-47F09E6F86F4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F2A27BAD-DDF4-4C72-8996-6D32656D9DD7}"
 EndProject
@@ -54,10 +52,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C2E1A4BF-04B3-4049-B4C3-9F78FC4D3C59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C2E1A4BF-04B3-4049-B4C3-9F78FC4D3C59}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C2E1A4BF-04B3-4049-B4C3-9F78FC4D3C59}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C2E1A4BF-04B3-4049-B4C3-9F78FC4D3C59}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4BD25651-7DB8-4B7F-AD78-210132CF38D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4BD25651-7DB8-4B7F-AD78-210132CF38D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BD25651-7DB8-4B7F-AD78-210132CF38D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
