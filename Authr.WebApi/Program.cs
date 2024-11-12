@@ -2,6 +2,7 @@ namespace Authr.WebApi;
 
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.DataProtection;
 /// </summary>
 public static class Program
 {
-    private const string AuthScheme = "cookie";
+    private const string AuthScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     private const string AuthScheme2 = "cookie2";
 
     /// <summary>
@@ -38,7 +39,7 @@ public static class Program
     private static WebApplicationBuilder RegisterCustomAuth(this WebApplicationBuilder builder)
     {
         // An authentication can have multiple schemes registered.
-        builder.Services.AddAuthentication("cookie")
+        builder.Services.AddAuthentication(AuthScheme)
             .AddCookie(AuthScheme)
             .AddCookie(AuthScheme2);
 
@@ -47,7 +48,8 @@ public static class Program
         builder.Services.AddAuthorizationBuilder()
             .AddPolicy("eu passport", pb =>
             {
-                pb.RequireAuthenticatedUser()
+                pb
+                    .RequireAuthenticatedUser()
                     .AddAuthenticationSchemes(AuthScheme)
                     .AddRequirements(new MinimumAgeRequirement(18))
                     .RequireClaim("passport", "eur");
@@ -65,8 +67,10 @@ public static class Program
         });
 
         // Access to /sweden endpoint requires the caller to fulfill the 'eu passport' policy.
-        // In this case it must be in the 'cookie' scheme, more than 18 years old and holds the 'eur' passport,
+        // In this case it must be in the 'Cookies' scheme, more than 18 years old and holds the 'eur' passport,
         // three distinct conditions.
+        // NOTE: Right now it is returning 404 for unauthorized request instead of 401.
+        // Suspect is due to the redirect uri is incorrect.
         app.MapGet("/sweden", (HttpContext ctx) =>
         {
             return "allowed";
@@ -119,8 +123,8 @@ public static class Program
         {
             var protector = idp.CreateProtector("auth-cookie");
 
-            // equivalent to `ctx.Response.Headers.SetCookie` property
-            ctx.Response.Headers["set-cookie"] = $"auth={protector.Protect("usr:sharon")}";
+            // equivalent to `ctx.Response.Headers["set-cookie"]` property
+            ctx.Response.Headers.SetCookie = $"auth={protector.Protect("usr:sharon")}";
             return "ok";
         });
 
