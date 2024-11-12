@@ -6,14 +6,14 @@ After that, the user can call other endpoints with the cookie header to authenti
 ```cs
 app.MapGet("/login", (HttpContext ctx) =>
 {
-	ctx.Response.Headers["set-cookie"] = "<key>=<value>";
-	return "ok";
+    ctx.Response.Headers["set-cookie"] = "<key>=<value>";
+    return "ok";
 });
 
 app.MapGet("/private", (HttpContext ctx) =>
 {
-	var cookie = ctx.Request.Headers.Cookie.FirstOrDefault(x => x.StartsWith("<key>="));
-	// do something with cookie
+    var cookie = ctx.Request.Headers.Cookie.FirstOrDefault(x => x.StartsWith("<key>="));
+    // do something with cookie
 });
 ```
 
@@ -30,20 +30,22 @@ builder.Services.AddDataProtection();
 
 app.MapGet("/login", (HttpContext ctx, IDataProtectionProvider idp) =>
 {
-	var protector = idp.CreateProtector("auth-cookie");
-	ctx.Response.Headers["set-cookie"] = $"<key>={protector.Protect("<value>")}";
-	return "ok";
+    var protector = idp.CreateProtector("auth-cookie");
+    ctx.Response.Headers["set-cookie"] = $"<key>={protector.Protect("<value>")}";
+    return "ok";
 });
 
 app.MapGet("/secret", (HttpContext ctx, IDataProtectionProvider idp) =>
 {
-	var protector = idp.CreateProtector("auth-cookie");
-	var cookie = ctx.Request.Headers.Cookie.FirstOrDefault(x => x.StartsWith("<key>="));
-	var protectedPayload = cookie.Split("=").Last(); // '<value>'
-	var payload = protector.Unprotect(protectedPayload);
-	// do stuffs with decrypted payload
+    var protector = idp.CreateProtector("auth-cookie");
+    var cookie = ctx.Request.Headers.Cookie.FirstOrDefault(x => x.StartsWith("<key>="));
+    var protectedPayload = cookie.Split("=").Last(); // '<value>'
+    var payload = protector.Unprotect(protectedPayload);
+    // do stuffs with decrypted payload
 });
 ```
+
+Take a look at the cookie storage now. The value for the payload should be encrypted.
 
 ## Improving Reusability: Adding an AuthService
 
@@ -68,23 +70,23 @@ The `ClaimsPrincipal` is a set of documents that identify a user. It is the user
 ```cs
 app.Use((ctx, next) =>
 {
-	var idp = ctx.RequestServices.GetRequiredService<IDataProtectionProvider>();
-	// -- snip --
+    var idp = ctx.RequestServices.GetRequiredService<IDataProtectionProvider>();
+    // -- snip --
 
-	// who are you
-	var claims = new List<Claim>
-	{
-		new("email", "sharon@gmail.com"),
-		new("username", "sharon"),
-	};
+    // who are you
+    var claims = new List<Claim>
+    {
+        new("email", "sharon@gmail.com"),
+        new("username", "sharon"),
+    };
 
-	// your official identity
-	var identity = new ClaimsIdentity(claims);
+    // your official identity
+    var identity = new ClaimsIdentity(claims);
 
-	// documents
-	ctx.User = new ClaimsPrincipal(identity);
+    // documents
+    ctx.User = new ClaimsPrincipal(identity);
 
-	return next();
+    return next();
 });
 ```
 
@@ -93,7 +95,7 @@ We can access the individual claims via the `FindFirst` method from a claims pri
 ```cs
 app.MapGet("/", (HttpContext ctx) =>
 {
-	return ctx.User.FindFirst("email").Value;
+    return ctx.User.FindFirst("email").Value;
 });
 ```
 
@@ -107,7 +109,7 @@ The `AddCookie` method registers the necessary services to **read** and **write*
 
 ```cs
 builder.Services.AddAuthentication("cookie")
-	.AddCookie("cookie");
+    .AddCookie("cookie");
 ```
 
 Next, we can use the built-in `SignInAsync` through the context for signing in.
@@ -115,12 +117,12 @@ Next, we can use the built-in `SignInAsync` through the context for signing in.
 ```cs
 app.MapGet("/login", async (HttpContext ctx) =>
 {
-	var authScheme = "cookie";
-	List<Claim> claims = [new("username", "sharon")];
-	var identity = new ClaimsIdentity(claims, authScheme);
-	var user = new ClaimsPrincipal(identity);
-	await ctx.SignInAsync(authScheme, user);
-	return "ok";
+    const string authScheme = "cookie";
+    List<Claim> claims = [new("username", "sharon")];
+    var identity = new ClaimsIdentity(claims, authScheme);
+    var user = new ClaimsPrincipal(identity);
+    await ctx.SignInAsync(authScheme, user);
+    return "ok";
 });
 ```
 
@@ -131,22 +133,22 @@ To safe guard an API endpoint for those who are authorized only, we can utilize 
 ```cs
 app.MapGet("/secret", (HttpContext ctx) =>
 {
-	// authentication
-	if (!ctx.User.Identities.Any(x => x.AuthenticationType == "cookie")
-	{
-		ctx.Response.StatusCode = 401;
-		return string.Empty;
-	}
+    // authentication
+    if (!ctx.User.Identities.Any(x => x.AuthenticationType == "cookie")
+    {
+        ctx.Response.StatusCode = 401;
+        return string.Empty;
+    }
 
-	// authorization
-	if (!ctx.User.HasClaim("passport", "eur"))
-	{
-		ctx.Response.StatusCode = 403;
-		return "Forbidden";
-	}
+    // authorization
+    if (!ctx.User.HasClaim("passport", "eur"))
+    {
+        ctx.Response.StatusCode = 403;
+        return "Forbidden";
+    }
 
-	// authorized
-	return "ok";
+    // authorized
+    return "ok";
 });
 ```
 
@@ -160,7 +162,7 @@ For example,
 [AuthScheme("cookie")]
 app.MapGet("/secret", (HttpContext ctx) =>
 {
-	// do stuffs
+    // do stuffs
 });
 ```
 
@@ -170,7 +172,7 @@ Besides, we can create attribute to verify the claims as well.
 [AuthClaim("passport", "eur")]
 app.MapGet("/norway", (HttpContext context) =>
 {
-	// do stuffs
+    // do stuffs
 }
 ```
 
@@ -181,21 +183,21 @@ Besides using attributes, authorization can be executed as a middleware too.
 ```cs
 app.Use((ctx, next) =>
 {
-	// authentication
-	if (!ctx.User.Identities.Any(x => x.AuthenticationType == "cookie")
-	{
-		ctx.Response.StatusCode = 401;
-		return Task.CompletedTask;
-	}
+    // authentication
+    if (!ctx.User.Identities.Any(x => x.AuthenticationType == "cookie")
+    {
+        ctx.Response.StatusCode = 401;
+        return Task.CompletedTask;
+    }
 
-	// authorization
-	if (!ctx.User.HasClaim("passport", "eur"))
-	{
-		ctx.Response.StatusCode = 403;
-		return Task.CompletedTask;
-	}
+    // authorization
+    if (!ctx.User.HasClaim("passport", "eur"))
+    {
+        ctx.Response.StatusCode = 403;
+        return Task.CompletedTask;
+    }
 
-	return "ok";
+    return "ok";
 });
 ```
 
@@ -206,12 +208,12 @@ Hence, we will need to circumvent all the kinds of auth checks for those endpoin
 ```cs
 app.Use((ctx, next) =>
 {
-	if (ctx.Request.Path.StartsWithSegments("/login"))
-	{
-		return next();
-	}
+    if (ctx.Request.Path.StartsWithSegments("/login"))
+    {
+        return next();
+    }
 
-	// -- snip --
+    // -- snip --
 });
 ```
 
@@ -234,12 +236,12 @@ The policy `eu passport` that requires a user to be authenticated, having the co
 ```cs
 builder.Services.AddAuthorization(builder =>
 {
-	builder.AddPolicy("eu passport", pb =>
-	{
-		pb.RequireAuthenticatedUser()
-			.AddAuthenticationSchemes("cookie")
-			.RequireClaim("passport", "eur");
-	});
+    builder.AddPolicy("eu passport", pb =>
+    {
+        pb.RequireAuthenticatedUser()
+            .AddAuthenticationSchemes("cookie")
+            .RequireClaim("passport", "eur");
+    });
 });
 ```
 
@@ -248,7 +250,7 @@ After the policy `eu passport` is built, we can use it in any of the endpoints.
 ```cs
 app.MapGet("/denmark", (HttpContext ctx) =>
 {
-	// ...
+    // ...
 }).RequireAuthorization("eu passport");
 ```
 
@@ -264,7 +266,7 @@ To enable the public endpoints like login or register to allow unauthenticated a
 ```cs
 app.MapGet("/login", (HttpContext ctx) =>
 {
-	// ...
+    // ...
 }).AllowAnonymous();
 ```
 
@@ -277,34 +279,34 @@ Each requirement requires two classes, one for accepting parameters, that will i
 ```cs [MinimumAgeRequirement.cs]
 public class MinimumAgeRequirement : IAuthorizationRequirement
 {
-	private readonly int minimumAge;
+    private readonly int minimumAge;
 
-	public MinimumAgeRequirement(int minimumAge)
-	{
-		this.minimumAge = minimumAge;
-	}
+    public MinimumAgeRequirement(int minimumAge)
+    {
+        this.minimumAge = minimumAge;
+    }
 
-	public int MinimumAge => minimumAge;
+    public int MinimumAge => minimumAge;
 }
 ```
 
 ```cs [MinimumAgeHandler.cs]
 public class MinimumAgeHandler : AuthorizationHandler<MinimumAgeRequirement>
 {
-	public MinimumAgeHandler() // Can inject any service that is registered
-	{
-	}
+    public MinimumAgeHandler() // Can inject any service that is registered
+    {
+    }
 
-	protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, MinimumAgeRequirement requirement)
-	{
-		var configuredMinimumAge = requirement.MinimumAge;
-		/*
-			if success, call `context.Suceed(requirement)`
-			optionally if fail, call `context.Fail(requirement)`
+    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, MinimumAgeRequirement requirement)
+    {
+        var configuredMinimumAge = requirement.MinimumAge;
+        /*
+            if success, call `context.Suceed(requirement)`
+            optionally if fail, call `context.Fail(requirement)`
 
-			always return Task.CompletedTask if not using Async services.
-		 */
-	}
+            always return Task.CompletedTask if not using Async services.
+         */
+    }
 }
 ```
 
@@ -315,13 +317,13 @@ builder.Services.AddSingleton<IAuthorizationHandler, MinimumAgeHandler>();
 
 builder.Services.AddAuthorization(builder =>
 {
-	builder.AddPolicy("eu passport", pb =>
-	{
-		pb.RequireAuthenticatedUser()
-			.AddAuthenticationSchemes("cookie")
-			.AddRequirements(new MinimumAgeRequirement(18))
-			.RequireClaim("passport", "eur");
-	});
+    builder.AddPolicy("eu passport", pb =>
+    {
+        pb.RequireAuthenticatedUser()
+            .AddAuthenticationSchemes("cookie")
+            .AddRequirements(new MinimumAgeRequirement(18))
+            .RequireClaim("passport", "eur");
+    });
 });
 ```
 
