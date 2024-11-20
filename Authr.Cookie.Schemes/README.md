@@ -8,4 +8,4 @@ There will be 3 schemes,
 1. `local` - Authenticated users
 1. `oauth` - OAuth authenticated users
 
-
+Multiple schemes can be used to identify multiple parts of the system.

@@ -31,7 +31,7 @@ public class VisitorAuthHandler(IOptionsMonitor<CookieAuthenticationOptions> opt
         // If sign in unsuccessful, create a default visitor id
         var claims = new List<Claim>
         {
-            new("usr", "anton"),
+            new("usr", "sharon"),
         };
         var identity = new ClaimsIdentity(claims, "visitor");
         var user = new ClaimsPrincipal(identity);

@@ -1,5 +1,3 @@
-﻿# Role Based Access Control
+﻿# Project
 
-RBAC is a way to manage users' access to an application or resource.
-
-
+Roles are basically claims.
