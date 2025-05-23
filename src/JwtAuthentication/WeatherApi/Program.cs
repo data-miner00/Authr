@@ -1,10 +1,14 @@
+using Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var secretKey = builder.Configuration["SecretKey"] ?? throw new InvalidOperationException("SecretKey not set.");
+var config = builder.Configuration
+    .GetSection(nameof(ApplicationOptions))
+    .Get<ApplicationOptions>()
+    ?? throw new InvalidOperationException("ApplicationOptions not set.");
 
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -13,15 +17,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         opt.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.SecretKey)),
             ValidateIssuer = true,
-            ValidIssuer = "http://id.localhost.com",
+            ValidIssuer = config.Issuer,
             ValidateAudience = true,
-            ValidAudience = "http://localhost.com",
+            ValidAudience = config.Audience,
             ValidateLifetime = true,
         };
     });
-// Add services to the container.
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 

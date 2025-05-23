@@ -1,5 +1,6 @@
 ﻿namespace IdentityApi;
 
+using Core;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -7,31 +8,35 @@ using System.Text;
 
 public class TokenGenerator
 {
-    private readonly string secretKey;
+    private readonly ApplicationOptions options;
     private readonly SecurityTokenHandler tokenHandler;
 
-    public TokenGenerator(string secretKey, SecurityTokenHandler tokenHandler)
+    public TokenGenerator(ApplicationOptions options, SecurityTokenHandler tokenHandler)
     {
-        this.secretKey = secretKey;
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(tokenHandler);
+
+        this.options = options;
         this.tokenHandler = tokenHandler;
     }
 
     public string GenerateToken(Guid userId, string email)
     {
+        var symmetricKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.options.SecretKey));
+        var signingCredentials = new SigningCredentials(symmetricKey, SecurityAlgorithms.HmacSha256Signature);
+
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[]
-                    {
+            Subject = new ClaimsIdentity(
+            [
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, email),
-            }),
+            ]),
             Expires = DateTime.UtcNow.AddHours(1),
-            SigningCredentials = new SigningCredentials(
-                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
-                        SecurityAlgorithms.HmacSha256Signature),
-            Issuer = "http://id.localhost.com",
-            Audience = "http://localhost.com",
+            SigningCredentials = signingCredentials,
+            Issuer = this.options.Issuer,
+            Audience = this.options.Audience,
         };
 
         var token = this.tokenHandler.CreateToken(tokenDescriptor);

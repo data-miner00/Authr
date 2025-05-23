@@ -1,5 +1,6 @@
 namespace IdentityApi;
 
+using Core;
 using Microsoft.AspNetCore.Identity.Data;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -10,8 +11,12 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-        var secretKey = builder.Configuration["SecretKey"] ?? throw new InvalidOperationException("SecretKey not set.");
-        builder.Services.AddSingleton(new TokenGenerator(secretKey, new JwtSecurityTokenHandler()));
+        var config = builder.Configuration
+            .GetSection(nameof(ApplicationOptions))
+            .Get<ApplicationOptions>()
+            ?? throw new InvalidOperationException("ApplicationOptions not set.");
+
+        builder.Services.AddSingleton(new TokenGenerator(config, new JwtSecurityTokenHandler()));
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
