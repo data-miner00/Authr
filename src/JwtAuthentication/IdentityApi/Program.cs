@@ -1,6 +1,7 @@
 namespace IdentityApi;
 
 using Core;
+using IdentityApi.Models;
 using Microsoft.AspNetCore.Identity.Data;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -31,11 +32,61 @@ public class Program
 
         app.MapPost("/login", (LoginRequest request, TokenGenerator tokenGenerator) =>
         {
-            return Results.Ok(new
+            var refreshToken = new RefreshToken
             {
-                token = tokenGenerator.GenerateToken(Guid.NewGuid(), request.Email),
-            });
+                Id = Guid.NewGuid().ToString(),
+                UserId = request.Email,
+                Token = RefreshToken.Generate(),
+                ExpiresAt = DateTime.UtcNow.AddDays(7),
+            };
+
+            RefreshTokenRepository.Add(refreshToken);
+
+            var loginResponse = new LoginResponse
+            {
+                AccessToken = tokenGenerator.GenerateToken(Guid.NewGuid(), request.Email),
+                RefreshToken = refreshToken.Token,
+            };
+
+            return Results.Ok(loginResponse);
         });
+
+        app.MapPost("/login-refresh", (LoginWithRefreshTokenRequest request, TokenGenerator tokenGenerator) =>
+        {
+            var refreshToken = RefreshTokenRepository.GetByToken(request.RefreshToken);
+            if (refreshToken == null || refreshToken.ExpiresAt < DateTime.UtcNow)
+            {
+                return Results.Unauthorized();
+            }
+
+            var newRefreshToken = new RefreshToken
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserId = refreshToken.UserId,
+                Token = RefreshToken.Generate(),
+                ExpiresAt = DateTime.UtcNow.AddDays(7),
+            };
+
+            RefreshTokenRepository.Remove(refreshToken.UserId);
+            RefreshTokenRepository.Add(newRefreshToken);
+
+            var loginResponse = new LoginResponse
+            {
+                AccessToken = tokenGenerator.GenerateToken(Guid.NewGuid(), refreshToken.UserId),
+                RefreshToken = newRefreshToken.Token,
+            };
+
+            return Results.Ok(loginResponse);
+        })
+        .WithTags("refresh");
+
+        app.MapDelete("/users/{userId}/login-refresh", (string userId) =>
+        {
+            RefreshTokenRepository.Remove(userId);
+
+            return Results.NoContent();
+        })
+        .WithTags("refresh");
 
         app.UseHttpsRedirection();
 
