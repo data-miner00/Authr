@@ -33,7 +33,7 @@ public class TokenGenerator
                 new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, email),
             ]),
-            Expires = DateTime.UtcNow.AddHours(1),
+            Expires = DateTime.UtcNow.AddMinutes(this.options.TokenExpirationMinutes),
             SigningCredentials = signingCredentials,
             Issuer = this.options.Issuer,
             Audience = this.options.Audience,

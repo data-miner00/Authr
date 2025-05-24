@@ -42,6 +42,11 @@ public sealed class ApplicationOptions : IDisposable
     /// </summary>
     public required string Audience { get; set; }
 
+    /// <summary>
+    /// Gets or sets the expiration time of the JWT tokens in minutes.
+    /// </summary>
+    public int TokenExpirationMinutes { get; set; }
+
     /// <inheritdoc/>
     public void Dispose()
     {
