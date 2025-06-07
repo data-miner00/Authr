@@ -1,5 +1,7 @@
 namespace AuthServer;
 
+using AuthServer.Repositories;
+
 public class Program
 {
     public static void Main(string[] args)
@@ -8,6 +10,7 @@ public class Program
 
         builder.Services.AddControllers();
         builder.Services.AddOpenApi();
+        builder.Services.AddSingleton<IApplicationRepository, ApplicationRepository>();
 
         var app = builder.Build();
 
