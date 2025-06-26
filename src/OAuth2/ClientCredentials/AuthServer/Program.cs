@@ -4,6 +4,7 @@ using AuthServer.Models.Private;
 using AuthServer.Repositories;
 using JWT.Algorithms;
 using System.Security.Cryptography;
+using Scalar.AspNetCore;
 
 public static class Program
 {
@@ -26,6 +27,7 @@ public static class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+            app.MapScalarApiReference();
         }
 
         app.UseHttpsRedirection();
