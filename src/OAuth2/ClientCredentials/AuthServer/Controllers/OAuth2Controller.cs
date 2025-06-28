@@ -6,9 +6,6 @@ using AuthServer.Repositories;
 using JWT.Algorithms;
 using JWT.Builder;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 
 [Route("oauth")]
 [ApiController]
@@ -29,11 +26,11 @@ public class OAuth2Controller : ControllerBase
     }
 
     [HttpPost("token")]
-    public async Task<IActionResult> Token([FromForm] string grant_type, [FromForm] string client_id, [FromForm] string client_secret, [FromForm] string scope)
+    public async Task<IActionResult> Token([AsParameters] GetTokenRequest request)
     {
-        if (string.IsNullOrWhiteSpace(grant_type) ||
-            string.IsNullOrWhiteSpace(client_id) ||
-            string.IsNullOrWhiteSpace(client_secret))
+        if (string.IsNullOrWhiteSpace(request.GrantType) ||
+            string.IsNullOrWhiteSpace(request.ClientId) ||
+            string.IsNullOrWhiteSpace(request.ClientSecret))
         {
             return this.BadRequest(new FailedResponse
             {
@@ -42,7 +39,7 @@ public class OAuth2Controller : ControllerBase
             });
         }
 
-        if (grant_type != "client_credentials")
+        if (request.GrantType != "client_credentials")
         {
             return this.BadRequest(new FailedResponse
             {
@@ -51,7 +48,7 @@ public class OAuth2Controller : ControllerBase
             });
         }
 
-        var registration = await this.repository.Get(client_id);
+        var registration = await this.repository.Get(request.ClientId);
 
         if (registration is null)
         {
@@ -62,7 +59,7 @@ public class OAuth2Controller : ControllerBase
             });
         }
 
-        if (!registration.ClientSecret.Equals(client_secret, StringComparison.Ordinal))
+        if (!registration.ClientSecret.Equals(request.ClientSecret, StringComparison.Ordinal))
         {
             return this.Unauthorized(new FailedResponse
             {
@@ -73,8 +70,12 @@ public class OAuth2Controller : ControllerBase
 
         var token = JwtBuilder.Create()
             .WithAlgorithm(this.algorithm)
-            .AddClaim("iss", this.jwtOption.Issuer)
-            .AddClaim("exp", DateTimeOffset.UtcNow.AddMinutes(this.jwtOption.ExpirationInMinutes).ToUnixTimeSeconds())
+            .AddClaim(ClaimName.Issuer, this.jwtOption.Issuer)
+            .AddClaim(ClaimName.ExpirationTime, DateTimeOffset.UtcNow.AddMinutes(this.jwtOption.ExpirationInMinutes).ToUnixTimeSeconds())
+            .AddClaim(ClaimName.Audience, registration.Name)
+            .AddClaim(ClaimName.IssuedAt, DateTimeOffset.UtcNow.ToUnixTimeSeconds())
+            .AddClaim(ClaimName.NotBefore, DateTimeOffset.UtcNow.ToUnixTimeSeconds())
+            .AddClaim(ClaimName.Subject, registration.ClientId)
             .AddClaim("shaun", "hello")
             .Encode();
 
