@@ -30,7 +30,8 @@ public class OAuth2Controller : ControllerBase
     {
         if (string.IsNullOrWhiteSpace(request.GrantType) ||
             string.IsNullOrWhiteSpace(request.ClientId) ||
-            string.IsNullOrWhiteSpace(request.ClientSecret))
+            string.IsNullOrWhiteSpace(request.ClientSecret) ||
+            string.IsNullOrWhiteSpace(request.Scope))
         {
             return this.BadRequest(new FailedResponse
             {
@@ -76,6 +77,7 @@ public class OAuth2Controller : ControllerBase
             .AddClaim(ClaimName.IssuedAt, DateTimeOffset.UtcNow.ToUnixTimeSeconds())
             .AddClaim(ClaimName.NotBefore, DateTimeOffset.UtcNow.ToUnixTimeSeconds())
             .AddClaim(ClaimName.Subject, registration.ClientId)
+            .AddClaim("scope", request.Scope)
             .AddClaim("shaun", "hello")
             .Encode();
 
