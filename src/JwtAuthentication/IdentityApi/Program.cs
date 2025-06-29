@@ -4,6 +4,7 @@ using Core;
 using IdentityApi.Models;
 using Microsoft.AspNetCore.Identity.Data;
 using System.IdentityModel.Tokens.Jwt;
+using Scalar.AspNetCore;
 
 public class Program
 {
@@ -28,7 +29,10 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+            app.MapScalarApiReference();
         }
+
+        app.UseHttpsRedirection();
 
         app.MapPost("/login", (LoginRequest request, TokenGenerator tokenGenerator) =>
         {
@@ -87,8 +91,6 @@ public class Program
             return Results.NoContent();
         })
         .WithTags("refresh");
-
-        app.UseHttpsRedirection();
 
         app.Run();
     }
