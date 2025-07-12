@@ -49,7 +49,7 @@ app
 
 app.MapGet("/", () => "hello").RequireAuthorization("customer");
 
-app.MapGet("/login-local", async (ctx) =>
+app.MapGet("/login-local", async Task (ctx) =>
 {
     var claims = new List<Claim>
     {
@@ -62,7 +62,7 @@ app.MapGet("/login-local", async (ctx) =>
     await ctx.SignInAsync("local", user);
 });
 
-app.MapGet("/login-oauth", async (ctx) =>
+app.MapGet("/login-oauth", async Task (ctx) =>
 {
     await ctx.ChallengeAsync("external-oauth", new AuthenticationProperties
     {

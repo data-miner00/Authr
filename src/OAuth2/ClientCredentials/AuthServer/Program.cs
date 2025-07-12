@@ -18,28 +18,20 @@ public static class Program
         var jwt = builder.Configuration.GetSection(JwtOption.JwtSectionName).Get<JwtOption>()
             ?? throw new InvalidOperationException("Jwt section not found");
         builder.Services.AddSingleton(jwt);
-        builder.AddRsaAlgorithm();
+        builder.Services.AddRsaAlgorithm();
 
         var app = builder.Build();
 
         app.UseStaticFiles();
-
-        if (app.Environment.IsDevelopment())
-        {
-            app.MapOpenApi();
-            app.MapScalarApiReference();
-        }
-
+        app.MapOpenApi();
+        app.MapScalarApiReference();
         app.UseHttpsRedirection();
-
         app.UseAuthorization();
-
         app.MapControllers();
-
         app.Run();
     }
 
-    private static WebApplicationBuilder AddRsaAlgorithm(this WebApplicationBuilder builder)
+    private static IServiceCollection AddRsaAlgorithm(this IServiceCollection collection)
     {
         var @public = RSA.Create();
         @public.ImportFromPem(KeysHelper.PublicKey());
@@ -47,8 +39,8 @@ public static class Program
         @private.ImportFromPem(KeysHelper.PrivateKey());
         var algorithm = new RS256Algorithm(@public, @private);
 
-        builder.Services.AddSingleton(algorithm);
+        collection.AddSingleton(algorithm);
 
-        return builder;
+        return collection;
     }
 }

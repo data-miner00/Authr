@@ -20,7 +20,7 @@ public static class UserHelper
             new("username", user.Username),
         };
 
-        claims.AddRange(user.Claims.Select(x => new Claim(x.Type, x.Value)));
+        claims.AddRange(user.Claims);
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         return new(identity);

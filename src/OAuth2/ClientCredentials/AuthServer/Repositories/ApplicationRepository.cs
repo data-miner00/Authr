@@ -3,21 +3,27 @@
 using AuthServer.Models.Private;
 using System.Threading.Tasks;
 
+/// <summary>
+/// The in-memory application registration repository.
+/// </summary>
 public class ApplicationRepository : IApplicationRepository
 {
     private readonly List<ApplicationInfo> applications = [];
 
-    Task<ApplicationInfo?> IApplicationRepository.Get(string clientId)
+    /// <inheritdoc/>
+    Task<ApplicationInfo?> IApplicationRepository.GetAsync(string clientId)
     {
         var application = this.applications.FirstOrDefault(app => app.ClientId == clientId);
         return Task.FromResult(application);
     }
 
+    /// <inheritdoc/>
     Task<bool> IApplicationRepository.IsRegisteredAsync(string clientId)
     {
         return Task.FromResult(this.applications.Exists(app => app.ClientId == clientId));
     }
 
+    /// <inheritdoc/>
     Task IApplicationRepository.RegisterAsync(ApplicationInfo info)
     {
         this.applications.Add(info);
@@ -25,6 +31,7 @@ public class ApplicationRepository : IApplicationRepository
         return Task.CompletedTask;
     }
 
+    /// <inheritdoc/>
     Task IApplicationRepository.UnregisterAsync(string clientId)
     {
         var app = this.applications.FirstOrDefault(app => app.ClientId == clientId);

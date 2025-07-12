@@ -1,4 +1,4 @@
-﻿namespace Authr.WebApi;
+﻿namespace Authr.Core;
 
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;

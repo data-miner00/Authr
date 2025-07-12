@@ -88,14 +88,14 @@ app.MapGet("/promote", async (string username, Database db) =>
     return "promoted";
 });
 
-app.MapGet("/start-reset-pw", async (string username, Database db, IDataProtectionProvider provider) =>
+app.MapGet("/start-reset-pw", async Task<string> (string username, Database db, IDataProtectionProvider provider) =>
 {
     var protector = provider.CreateProtector("PasswordReset");
     var user = await db.GetUserAsync(username);
     return protector.Protect(user.Username);
 });
 
-app.MapGet("/end-reset-pw", async (
+app.MapGet("/end-reset-pw", async Task<string> (
     string username,
     string password,
     string hash,

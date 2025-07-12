@@ -6,17 +6,29 @@ using AuthServer.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+/// <summary>
+/// The application registration controller.
+/// </summary>
 [Route("api/app")]
 [ApiController]
 public class ApplicationController : ControllerBase
 {
     private readonly IApplicationRepository repository;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ApplicationController"/> class.
+    /// </summary>
+    /// <param name="repository">The application repository.</param>
     public ApplicationController(IApplicationRepository repository)
     {
         this.repository = repository;
     }
 
+    /// <summary>
+    /// Registers an application.
+    /// </summary>
+    /// <param name="request">The app registration request.</param>
+    /// <returns>The action result.</returns>
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegistrationRequest request)
     {
@@ -35,10 +47,15 @@ public class ApplicationController : ControllerBase
         return this.Created();
     }
 
-    [HttpGet("info/{clientId}")]
+    /// <summary>
+    /// Gets the single app registration by client Id.
+    /// </summary>
+    /// <param name="clientId">The client Id.</param>
+    /// <returns>The action result.</returns>
+    [HttpGet("{clientId}")]
     public async Task<IActionResult> GetInfo(string clientId)
     {
-        var app = await this.repository.Get(clientId);
+        var app = await this.repository.GetAsync(clientId);
         if (app is null)
         {
             return this.NotFound(new FailedResponse

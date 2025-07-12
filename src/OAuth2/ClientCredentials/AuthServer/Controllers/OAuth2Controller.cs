@@ -49,7 +49,7 @@ public class OAuth2Controller : ControllerBase
             });
         }
 
-        var registration = await this.repository.Get(request.ClientId);
+        var registration = await this.repository.GetAsync(request.ClientId);
 
         if (registration is null)
         {
@@ -69,13 +69,15 @@ public class OAuth2Controller : ControllerBase
             });
         }
 
+        var now = DateTimeOffset.UtcNow;
+
         var token = JwtBuilder.Create()
             .WithAlgorithm(this.algorithm)
             .AddClaim(ClaimName.Issuer, this.jwtOption.Issuer)
-            .AddClaim(ClaimName.ExpirationTime, DateTimeOffset.UtcNow.AddMinutes(this.jwtOption.ExpirationInMinutes).ToUnixTimeSeconds())
+            .AddClaim(ClaimName.ExpirationTime, now.AddMinutes(this.jwtOption.ExpirationInMinutes).ToUnixTimeSeconds())
             .AddClaim(ClaimName.Audience, registration.Name)
-            .AddClaim(ClaimName.IssuedAt, DateTimeOffset.UtcNow.ToUnixTimeSeconds())
-            .AddClaim(ClaimName.NotBefore, DateTimeOffset.UtcNow.ToUnixTimeSeconds())
+            .AddClaim(ClaimName.IssuedAt, now.ToUnixTimeSeconds())
+            .AddClaim(ClaimName.NotBefore, now.ToUnixTimeSeconds())
             .AddClaim(ClaimName.Subject, registration.ClientId)
             .AddClaim("scope", request.Scope)
             .AddClaim("shaun", "hello")
