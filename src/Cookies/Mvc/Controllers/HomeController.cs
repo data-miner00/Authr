@@ -1,6 +1,6 @@
-namespace Authr.Cookie.Mvc.Controllers;
+namespace Mvc.Controllers;
 
-using Authr.Cookie.Mvc.Models;
+using Mvc.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;

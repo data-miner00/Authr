@@ -1,4 +1,4 @@
-namespace Authr.Cookie.Mvc.Models;
+namespace Mvc.Models;
 
 public class ErrorViewModel
 {
