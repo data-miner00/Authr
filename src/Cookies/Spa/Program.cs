@@ -9,7 +9,7 @@ builder.Services.AddAuthentication("default")
         o.Cookie.Name = "kookie";
         o.Cookie.Domain = string.Empty;  // Browser will autopopulate to current domain
         // o.Cookie.Path = "/path"; // This cookie will only applicable to the path set
-        o.Cookie.HttpOnly = false;
+        o.Cookie.HttpOnly = false; // vulnerable to XSS
         o.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         o.Cookie.SameSite = SameSiteMode.Lax;
 
