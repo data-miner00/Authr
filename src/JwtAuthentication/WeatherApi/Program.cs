@@ -24,7 +24,7 @@ public static class Program
                 opt.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.SecretKey)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.SecretKey)), // Also can use Convert.FromBase64String
                     ValidateIssuer = true,
                     ValidIssuer = config.Issuer,
                     ValidateAudience = true,

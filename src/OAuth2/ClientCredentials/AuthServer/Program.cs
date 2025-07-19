@@ -15,6 +15,7 @@ public static class Program
         builder.Services.AddControllers();
         builder.Services.AddOpenApi();
         builder.Services.AddSingleton<IApplicationRepository, ApplicationRepository>();
+        builder.Services.AddSingleton<IScopeRepository, ScopeRepository>();
         var jwt = builder.Configuration.GetSection(JwtOption.JwtSectionName).Get<JwtOption>()
             ?? throw new InvalidOperationException("Jwt section not found");
         builder.Services.AddSingleton(jwt);
