@@ -9,4 +9,6 @@ public class RegistrationRequest
     public string ClientId { get; set; }
 
     public string RedirectUri { get; set; }
+
+    public IList<string> Scopes { get; set; }
 }

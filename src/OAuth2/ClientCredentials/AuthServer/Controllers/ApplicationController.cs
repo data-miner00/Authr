@@ -13,15 +13,20 @@ using Microsoft.AspNetCore.Mvc;
 [ApiController]
 public class ApplicationController : ControllerBase
 {
-    private readonly IApplicationRepository repository;
+    private readonly IApplicationRepository appRepository;
+    private readonly IScopeRepository scopeRepository;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ApplicationController"/> class.
     /// </summary>
-    /// <param name="repository">The application repository.</param>
-    public ApplicationController(IApplicationRepository repository)
+    /// <param name="appRepository">The application repository.</param>
+    /// <param name="scopeRepository">The scope repository.</param>
+    public ApplicationController(
+        IApplicationRepository appRepository,
+        IScopeRepository scopeRepository)
     {
-        this.repository = repository;
+        this.appRepository = appRepository;
+        this.scopeRepository = scopeRepository;
     }
 
     /// <summary>
@@ -32,6 +37,18 @@ public class ApplicationController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegistrationRequest request)
     {
+        var availableScopes = (await this.scopeRepository.GetAsync()).Select(x => x.Scope);
+        var requestedScopesRecognized = request.Scopes.Intersect(availableScopes).Count() == request.Scopes.Count;
+
+        if (!requestedScopesRecognized)
+        {
+            return this.BadRequest(new FailedResponse
+            {
+                Error = "not_found",
+                ErrorDescription = "One of the scope provided not found.",
+            });
+        }
+
         var app = new ApplicationInfo
         {
             ClientId = request.ClientId,
@@ -39,10 +56,10 @@ public class ApplicationController : ControllerBase
             Name = request.Name,
             Description = request.Description,
             //RedirectUris = request.RedirectUris,
-            //Scopes = request.Scopes
+            Scopes = request.Scopes,
         };
 
-        await this.repository.RegisterAsync(app);
+        await this.appRepository.RegisterAsync(app);
 
         return this.Created();
     }
@@ -55,7 +72,7 @@ public class ApplicationController : ControllerBase
     [HttpGet("{clientId}")]
     public async Task<IActionResult> GetInfo(string clientId)
     {
-        var app = await this.repository.GetAsync(clientId);
+        var app = await this.appRepository.GetAsync(clientId);
         if (app is null)
         {
             return this.NotFound(new FailedResponse
@@ -71,6 +88,7 @@ public class ApplicationController : ControllerBase
             Name = app.Name,
             Description = app.Description,
             ClientSecret = app.ClientSecret,
+            Scopes = app.Scopes,
         });
     }
 }

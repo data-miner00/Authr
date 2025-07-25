@@ -24,4 +24,9 @@ public class ApplicationInfo
     /// Gets or sets the client secret.
     /// </summary>
     public string ClientSecret { get; set; }
+
+    /// <summary>
+    /// Gets or sets the scopes assigned for the application.
+    /// </summary>
+    public IList<string> Scopes { get; set; }
 }
