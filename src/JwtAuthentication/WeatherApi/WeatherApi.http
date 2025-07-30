@@ -1,0 +1,20 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+@scheme = https
+@host = localhost
+@port = 7147
+
+GET {{scheme}}://{{host}}:{{port}}/weatherforecast
+
+###
+GET {{scheme}}://{{host}}:{{port}}/weatherforecast
+Accept: application/json
+Authorization: Bearer xxx
+
+###
+POST {{scheme}}://{{host}}:{{port}}/weatherforecast
+Content-Type: application/json
+
+{
+    "hello": "world"
+}
+
