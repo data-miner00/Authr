@@ -52,7 +52,7 @@ public class ApplicationController : ControllerBase
         var app = new ApplicationInfo
         {
             ClientId = request.ClientId,
-            ClientSecret = Guid.NewGuid().ToString(),
+            ClientSecrets = [],
             Name = request.Name,
             Description = request.Description,
             //RedirectUris = request.RedirectUris,
@@ -87,8 +87,63 @@ public class ApplicationController : ControllerBase
             ClientId = app.ClientId,
             Name = app.Name,
             Description = app.Description,
-            ClientSecret = app.ClientSecret,
+            ClientSecrets = app.ClientSecrets,
             Scopes = app.Scopes,
         });
+    }
+
+    [HttpPost("{clientId}/secret")]
+    public async Task<IActionResult> AddSecret(string clientId)
+    {
+        var app = await this.appRepository.GetAsync(clientId);
+        if (app is null)
+        {
+            return this.NotFound(new FailedResponse
+            {
+                Error = "not_found",
+                ErrorDescription = "Application not found.",
+            });
+        }
+
+        var secret = new ClientSecret
+        {
+            Id = Guid.NewGuid().ToString(),
+            Secret = Guid.NewGuid().ToString("N"),
+            CreatedAt = DateTime.UtcNow,
+            ExpiresAt = DateTime.UtcNow.AddYears(1),
+        };
+
+        app.ClientSecrets.Add(secret);
+
+        return this.Ok(secret);
+    }
+
+    [HttpDelete("{clientId}/secret/{secretId}")]
+    public async Task<IActionResult> AddSecret(string clientId, string secretId)
+    {
+        var app = await this.appRepository.GetAsync(clientId);
+        if (app is null)
+        {
+            return this.NotFound(new FailedResponse
+            {
+                Error = "not_found",
+                ErrorDescription = "Application not found.",
+            });
+        }
+
+        var secret = app.ClientSecrets.Find(x => x.Id == secretId);
+
+        if (secret is null)
+        {
+            return this.NotFound(new FailedResponse
+            {
+                Error = "not_found",
+                ErrorDescription = "Secret not found.",
+            });
+        }
+
+        app.ClientSecrets.Remove(secret);
+
+        return this.NoContent();
     }
 }

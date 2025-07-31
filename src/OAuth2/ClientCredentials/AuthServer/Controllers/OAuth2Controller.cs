@@ -60,7 +60,7 @@ public class OAuth2Controller : ControllerBase
             });
         }
 
-        if (!registration.ClientSecret.Equals(request.ClientSecret, StringComparison.Ordinal))
+        if (!registration.ClientSecrets.Exists(x => x.Secret.Equals(request.ClientSecret, StringComparison.Ordinal)))
         {
             return this.Unauthorized(new FailedResponse
             {
