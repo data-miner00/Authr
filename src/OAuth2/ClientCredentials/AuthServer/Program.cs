@@ -12,6 +12,7 @@ public static class Program
     {
         var app = CreateWebApplication(args);
 
+        app.SeedData();
         app.UseStaticFiles();
         app.MapOpenApi();
         app.MapScalarApiReference();
@@ -48,5 +49,15 @@ public static class Program
         collection.AddSingleton(algorithm);
 
         return collection;
+    }
+
+    private static WebApplication SeedData(this WebApplication app)
+    {
+        var appRepo = app.Services.GetRequiredService<IApplicationRepository>();
+        var scopeRepo = app.Services.GetRequiredService<IScopeRepository>();
+
+        Seeder.SeedAsync(appRepo, scopeRepo).GetAwaiter().GetResult();
+
+        return app;
     }
 }
