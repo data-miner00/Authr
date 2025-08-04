@@ -10,6 +10,19 @@ public static class Program
 {
     public static void Main(string[] args)
     {
+        var app = CreateWebApplication(args);
+
+        app.UseStaticFiles();
+        app.MapOpenApi();
+        app.MapScalarApiReference();
+        app.UseHttpsRedirection();
+        app.UseAuthorization();
+        app.MapControllers();
+        app.Run();
+    }
+
+    private static WebApplication CreateWebApplication(string[] args)
+    {
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllers();
@@ -21,15 +34,7 @@ public static class Program
         builder.Services.AddSingleton(jwt);
         builder.Services.AddRsaAlgorithm();
 
-        var app = builder.Build();
-
-        app.UseStaticFiles();
-        app.MapOpenApi();
-        app.MapScalarApiReference();
-        app.UseHttpsRedirection();
-        app.UseAuthorization();
-        app.MapControllers();
-        app.Run();
+        return builder.Build();
     }
 
     private static IServiceCollection AddRsaAlgorithm(this IServiceCollection collection)

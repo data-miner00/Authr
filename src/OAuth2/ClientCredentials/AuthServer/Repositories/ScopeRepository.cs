@@ -15,7 +15,7 @@ public class ScopeRepository : IScopeRepository
 
     public Task<ScopeInfo?> GetAsync(string scope)
     {
-        var scopeInfo = this.scopes.FirstOrDefault(x => x.Scope.Equals(scope));
+        var scopeInfo = this.scopes.Find(x => x.Scope.Equals(scope));
 
         return Task.FromResult(scopeInfo);
     }
@@ -28,7 +28,7 @@ public class ScopeRepository : IScopeRepository
 
     public Task UnregisterAsync(string scope)
     {
-        var scopeInfo = this.scopes.FirstOrDefault(x => x.Scope.Equals(scope));
+        var scopeInfo = this.scopes.Find(x => x.Scope.Equals(scope));
 
         if (scopeInfo != null)
         {

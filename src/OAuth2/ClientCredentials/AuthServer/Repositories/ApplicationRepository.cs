@@ -13,7 +13,7 @@ public class ApplicationRepository : IApplicationRepository
     /// <inheritdoc/>
     Task<ApplicationInfo?> IApplicationRepository.GetAsync(string clientId)
     {
-        var application = this.applications.FirstOrDefault(app => app.ClientId == clientId);
+        var application = this.applications.Find(app => app.ClientId == clientId);
         return Task.FromResult(application);
     }
 
@@ -34,7 +34,7 @@ public class ApplicationRepository : IApplicationRepository
     /// <inheritdoc/>
     Task IApplicationRepository.UnregisterAsync(string clientId)
     {
-        var app = this.applications.FirstOrDefault(app => app.ClientId == clientId);
+        var app = this.applications.Find(app => app.ClientId == clientId);
 
         if (app is not null)
         {
