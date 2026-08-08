@@ -32,8 +32,8 @@ public class AuthController : ControllerBase
         return this.File(qrCodeImage, "images/png");
     }
 
-    [HttpPost("otp/validate/{userid}/{secret}")]
-    public async Task<IActionResult> Validate(string userid, string secret)
+    [HttpPost("otp/validate/{userid}/{code}")]
+    public async Task<IActionResult> Validate(string userid, string code)
     {
         if (!UserSecrets.TryGetValue(userid, out var secretKey))
         {
@@ -42,7 +42,7 @@ public class AuthController : ControllerBase
 
         var totp = new Totp(Base32Encoding.ToBytes(secretKey));
         var isValid = totp.VerifyTotp(
-            secret,
+            code,
             out var timeStepMatched,
             VerificationWindow.RfcSpecifiedNetworkDelay); // gives 1 window from past and future
 
