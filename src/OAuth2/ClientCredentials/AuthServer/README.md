@@ -6,3 +6,8 @@
 
 - [Rsagen](https://cryptotools.net/rsagen)
 - [JWK Creator](https://russelldavies.github.io/jwk-creator/)
+
+## Todo
+
+- Connect scopes with app registration
+- Create 2 App that auth via client credentials
