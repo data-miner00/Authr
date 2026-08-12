@@ -1,0 +1,7 @@
+identity.authr-sso.local {
+	reverse_proxy localhost:5301
+}
+
+app.authr-sso.local {
+	reverse_proxy localhost:5302
+}
